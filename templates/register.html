@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %} Register {% endblock %}
+
+{% block content %}
+    <form action = "/register" method = "post">
+
+        <div class="mb-3">
+            <input id="username" name="username" placeholder="Type username" type="text" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <input id="password" name="password" placeholder="Type password" type="text" class="form-control">
+        </div>
+
+        <div class="mb-3">
+            <input id="confirmation" name="confirmation" placeholder="Type password again" type="text" class="form-control">
+        </div>
+
+        <button class="btn btn-primary" type="submit">Register</button>
+
+    </form>
+
+{% endblock%}
