@@ -1,0 +1,7 @@
+//creating a table containing users
+CREATE TABLE users(
+    id INTEGER PRIMARY KEY,
+    username TEXT,
+    password TEXT
+);
+

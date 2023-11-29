@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Get your customised meal</h1>
+<form action="/search_cuisine" method="post">
+    <label for="cuisine">Enter Cuisine:</label>
+    <input type="text" id="cuisine" name="cuisine">
+    <button type="submit">Search</button>
+</form>
+{% endblock %}
