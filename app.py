@@ -24,29 +24,34 @@ def index():
 def login():
     # Forget user_id
     session.clear()
-
     # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST": #here it will check the tag with "method = post" and goes on from there
 
+        retrieved_username = request.form.get("username")
+        retrieved_password = request.form.get("password")
         # Ensure username was submitted
-        if not request.form.get("username"):
+        if not retrieved_username:
         #here, the tag in /login path (login.html file in this case) is used to check if text has been input. The "name" element in the html tag is used to link here
             return "Username required"
 
         # Ensure password was submitted
-        elif not request.form.get("password"):
+        elif not retrieved_password:
         #here, the tag in /login path (login.html file in this case) is used to check if text has been input. The "name" element in the html tag is used to link here
             return "Password required"
 
-        # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = ?", request.form.get("username"))
+        try:
+            username_sql = db.execute("SELECT * FROM users WHERE username = ?", (retrieved_username,))
+            result= username_sql.fetchone()
+        except Exception as e:
+             return "invalid username"
 
-        # Ensure username exists and password is correct
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
-            return "invalid username and/or password"
+        try:
+            password_sql = db.execute("SELECT * FROM users WHERE hashed_password = ?", (retrieved_password,))
+        except Exception as e:
+             return "invalid password"
 
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = result[0] #result = (id,username,password), as the schema of the database query is known, hence result[0] was utilised here
 
         # Redirect user to home page
         return redirect("/")
