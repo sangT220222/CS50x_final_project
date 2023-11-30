@@ -13,7 +13,7 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-database = sqlite3.connect('final_project.db')
+database = sqlite3.connect('final_project.db', check_same_thread=False)
 db = database.cursor()
 
 @app.route("/")
@@ -82,10 +82,15 @@ def register():
 
             hashed_password = generate_password_hash(password) #hashing the password input by the user
 
-            db.execute("INSERT INTO users (username,hash) VALUES(?,?)", username, hashed_password)
+            print(hashed_password)
 
-            db.close()
-            database.close()
+            try:
+                print(f"Username: {username}, Hashed Password: {hashed_password}")
+                db.execute("INSERT INTO users (username, hashed_password) VALUES (?, ?)", (username, hashed_password))
+                database.commit()
+            except Exception as e:
+                print(f"Error: {e}")
+                database.rollback() # Rollback changes in case of an error
 
             # Redirect user to home page
             return redirect("/")
