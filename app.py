@@ -4,6 +4,7 @@ import sqlite3
 from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
+from helper import login_required
 
 import requests
 
@@ -17,7 +18,10 @@ database = sqlite3.connect('final_project.db', check_same_thread=False)
 db = database.cursor()
 
 @app.route("/")
+@login_required
 def index():
+    user_id = session["user_id"]
+    print(user_id)
     return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])

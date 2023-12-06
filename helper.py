@@ -1,4 +1,6 @@
 from flask import redirect, render_template, session
+from functools import wraps
+
 
 def login_required(f):
     """
@@ -15,6 +17,6 @@ def login_required(f):
 
 
 # API link : https://api.spoonacular.com/recipes/complexSearch
-# API key : ca38a5949eac429382c9501131ec7d24
+# API key : check website after you log in
 
 
