@@ -21,7 +21,6 @@ db = database.cursor()
 @login_required
 def index():
     user_id = session["user_id"]
-    print(user_id)
     return render_template("index.html")
 
 @app.route("/login", methods=["GET", "POST"])
@@ -44,18 +43,16 @@ def login():
             return "Password required"
 
         try:
-            username_sql = db.execute("SELECT * FROM users WHERE username = ?", (retrieved_username,))
-            result= username_sql.fetchone()
+            # Getting the username and password from the database based on user's input
+            username_sql = db.execute("SELECT * FROM users WHERE username = ?", (retrieved_username,)).fetchone()
+            # username_sql will return (id, username, hashed_passowrd)
+            # check_password_hash(hashed_password, plain password) -> returns bool
+            db.close()
+            if check_password_hash(username_sql[2], retrieved_password):
+            # Remember which user has logged in
+                session["user_id"] = username_sql[0] #result = (id,username,password), as the schema of the database query is known, hence result[0] was utilised here
         except Exception as e:
-             return "invalid username"
-
-        try:
-            password_sql = db.execute("SELECT * FROM users WHERE hashed_password = ?", (retrieved_password,))
-        except Exception as e:
-             return "invalid password"
-
-        # Remember which user has logged in
-        session["user_id"] = result[0] #result = (id,username,password), as the schema of the database query is known, hence result[0] was utilised here
+             return "Invalid username or passwored. Please try again"
 
         # Redirect user to home page
         return redirect("/")
@@ -66,48 +63,32 @@ def login():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    session.clear()
     if request.method == "POST":
 
-        users_table = db.execute("SELECT username FROM users")
-
-        # Ensure username was submitted
-        if not request.form.get("username"):
-            return "must provide username"
-
-        # Ensure password was submitted
-        elif not request.form.get("password"):
-            return "must provide password"
-
-        username = request.form.get("username")
-
-        for name in users_table:
-            if name['username'] == username:
-                return "username is taken, try a new username"
-
-        password = request.form.get("password")
+        new_username = request.form.get("username")
+        new_password = request.form.get("password")
         confirmation = request.form.get("confirmation")
 
-        if password == confirmation:
 
-            hashed_password = generate_password_hash(password) #hashing the password input by the user
+        # Ensure username/password are submitted
+        if not new_username or not new_password or not confirmation:
+            return "Must provide username/password/confirm password"
 
-            print(hashed_password)
+        users_result = db.execute("SELECT username FROM users").fetchall()
+        # users_results = [('test',), ('test2',)] for eg
+        for username in users_result:
+            if username[0] == new_username:
+                return "Username has been taken. Please try another one."
+        if not new_password == confirmation:
+            return "Passwords provided do not match"
 
-            try:
-                print(f"Username: {username}, Hashed Password: {hashed_password}")
-                db.execute("INSERT INTO users (username, hashed_password) VALUES (?, ?)", (username, hashed_password))
-                database.commit()
-            except Exception as e:
-                print(f"Error: {e}")
-                database.rollback() # Rollback changes in case of an error
+        db.execute("INSERT INTO users (username, hashed_password) VALUES (?, ?)", (new_username, generate_password_hash(new_password)))
+        database.commit()
+        db.close()
+        return redirect("/")
 
-            # Redirect user to home page
-            return redirect("/")
-        else:
-            return "passwords entered do not match"
-
-    else:
-        return render_template("register.html")
+    return render_template("register.html")
 
 @app.route("/search_cuisine", methods = ["POST"])
 def search(): #we will update this, for now we are writing the blueprint
