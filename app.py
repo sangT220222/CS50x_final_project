@@ -45,14 +45,19 @@ def login():
         try:
             # Getting the username and password from the database based on user's input
             username_sql = db.execute("SELECT * FROM users WHERE username = ?", (retrieved_username,)).fetchone()
-            # username_sql will return (id, username, hashed_passowrd)
-            # check_password_hash(hashed_password, plain password) -> returns bool
             db.close()
-            if check_password_hash(username_sql[2], retrieved_password):
-            # Remember which user has logged in
-                session["user_id"] = username_sql[0] #result = (id,username,password), as the schema of the database query is known, hence result[0] was utilised here
+            # username_sql will return (id, username, hashed_passowrd)
         except Exception as e:
-             return "Invalid username or passwored. Please try again"
+             return "Invalid username. Please try again"
+            # check_password_hash(hashed_password, plain password) -> returns bool
+
+        if check_password_hash(username_sql[2], retrieved_password):
+        # Remember which user has logged in
+            session["user_id"] = username_sql[0] #result = (id,username,password), as the schema of the database query is known, hence result[0] was utilised here
+        else:
+            return "Invalid password. Please try again"
+
+
 
         # Redirect user to home page
         return redirect("/")
@@ -89,6 +94,38 @@ def register():
         return redirect("/")
 
     return render_template("register.html")
+
+@app.route("/change_password", methods=["GET"])
+def change_password():
+        return render_template("change_password.html")
+
+@app.route("/update_password", methods = ["POST"])
+def update_password():
+        #get relevant information from the corresponding HTML fields
+        username = request.form.get("username")
+        old_password = request.form.get("old_password")
+        new_password = request.form.get("new_password")
+        confirm_password = request.form.get("confirm_password")
+
+        try:    #checking if provided username is in the database
+            information = db.execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+        except Exception as e:
+            return "Sorry, provided username is not in our system."
+
+        #checks for password matching with the system or not
+        if not check_password_hash(information[2], old_password):
+            return "Wrong password provided."
+
+        #checks if 2 provided new passwords match each oterh
+        if new_password != confirm_password:
+            return "New passwords provided do not match."
+
+        #updating the desired username's password on the system
+        db.execute("UPDATE users SET hashed_password = (?) where username = (?)", (generate_password_hash(new_password), username))
+        database.commit()
+        db.close()
+
+        return redirect("/")
 
 @app.route("/search_cuisine", methods = ["POST"])
 def search(): #we will update this, for now we are writing the blueprint
