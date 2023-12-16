@@ -4,25 +4,41 @@
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, width=device-width">
         <link href="/static/styles.css" rel="stylesheet">
-        <title>CusineCraft</title>
+        <title>{% block title %}{% endblock %}</title>
     </head>
 
     <body>
-      <div class="header">
-        <div class="left">
-          <div class="logo">
-            CuisineCraft
+      {% if session["user_id"] %}
+        <div class="header">
+          <div class="left">
+            <div class="logo">
+              CuisineCraft
+            </div>
+          </div>
+          <div class="right">
+            <ul class="links">
+              <li><a href="/logout">Logout</a></li>
+            </ul>
           </div>
         </div>
-        <div class="right">
-          <ul class="links">
-            <li><a href="google.com">Login</a></li>
-            <li><a href="google.com">Register</a></li>
-          </ul>
+      {% else %}
+        <div class="header">
+          <div class="left">
+            <div class="logo">
+              CuisineCraft
+            </div>
+          </div>
+          <div class="right">
+            <ul class="links">
+              <li><a href="/login">Login</a></li>
+              <li><a href="/register">Register</a></li>
+            </ul>
+          </div>
         </div>
-      </div>
-        {% block content %}
-        {% endblock %}
+      {% endif %}
+
+      {% block content %}
+      {% endblock %}
     </body>
 
 </html>

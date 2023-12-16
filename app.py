@@ -47,6 +47,7 @@ def login():
         try:
             # Getting the username and password from the database based on user's input
             username_sql = db.execute("SELECT * FROM users WHERE username = ?", (retrieved_username,)).fetchone()
+            print(username_sql)
             db.close()
             # username_sql will return (id, username, hashed_passowrd)
         except Exception as e:
@@ -129,10 +130,20 @@ def update_password():
 
         return redirect("/")
 
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
 @app.route("/search_cuisine", methods = ["POST"])
 def search(): #we will update this, for now we are writing the blueprint
     base_url = "https://api.spoonacular.com/recipes/complexSearch"
-    
+
     try:
         cuisine = request.form.get("cuisine")
     except:
