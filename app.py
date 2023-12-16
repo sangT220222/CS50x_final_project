@@ -17,6 +17,8 @@ Session(app)
 database = sqlite3.connect('final_project.db', check_same_thread=False)
 db = database.cursor()
 
+api_key = "ca38a5949eac429382c9501131ec7d24"
+
 @app.route("/")
 @login_required
 def index():
@@ -129,9 +131,8 @@ def update_password():
 
 @app.route("/search_cuisine", methods = ["POST"])
 def search(): #we will update this, for now we are writing the blueprint
-    api_key = "ca38a5949eac429382c9501131ec7d24"
     base_url = "https://api.spoonacular.com/recipes/complexSearch"
-
+    
     try:
         cuisine = request.form.get("cuisine")
     except:
@@ -155,7 +156,6 @@ def search(): #we will update this, for now we are writing the blueprint
 
 @app.route("/nutrients_search", methods = ["POST"])
 def nutrients_search(): #we will update this, for now we are writing the blueprint
-    api_key = "ca38a5949eac429382c9501131ec7d24" #might have to make this variable
     base_url = "https://api.spoonacular.com/recipes/findByNutrients"
 
     try:
