@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} Results {% endblock %}
+
+
+{% block content %}
+{% for recipe in recipes %}
+<div>
+    <h2>{{ recipe.title }}</h2>
+    <h3>Calories: {{ recipe.calories }} kcal</h3>
+    <h3>Protein: {{ recipe.protein }}</h3>
+    <h3>Carbohydates: {{ recipe.carbs }}</h3>
+    <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+</div>
+{% endfor %}
+{% endblock %}

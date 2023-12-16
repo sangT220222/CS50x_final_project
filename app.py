@@ -90,7 +90,7 @@ def register():
 
         db.execute("INSERT INTO users (username, hashed_password) VALUES (?, ?)", (new_username, generate_password_hash(new_password)))
         database.commit()
-        db.close()
+
         return redirect("/")
 
     return render_template("register.html")
@@ -153,3 +153,58 @@ def search(): #we will update this, for now we are writing the blueprint
         return f"Error: {response.status_code}"
 
 
+@app.route("/nutrients_search", methods = ["POST"])
+def nutrients_search(): #we will update this, for now we are writing the blueprint
+    api_key = "ca38a5949eac429382c9501131ec7d24" #might have to make this variable
+    base_url = "https://api.spoonacular.com/recipes/findByNutrients"
+
+    try:
+        calories = request.form.get("calories")
+        carbohydrates = request.form.get("carbs")
+        protein = request.form.get("protein")
+    except:
+        return "Error"
+
+    parametres = {
+        "apiKey" : api_key,
+        "maxCalories" : calories,
+        "minProtein" : protein,
+        "maxCarbs" : carbohydrates
+    }
+
+    response = requests.get(base_url, parametres)
+
+    if response.status_code == 200:
+        data = response.json()
+        recipes = [{"title": item["title"], "calories" : item["calories"], "protein" : item["protein"], "carbs" : item["carbs"], "image" : item["image"]} for item in data]
+        ## keys we want are title, image,calories,protein,fat and carbs
+
+        return render_template("nutrients_search.html", recipes = recipes)
+
+    else:
+        return f"Error: {response.status_code}"
+
+# [{"key": value, "key2", value}, {"key" : value, "key2": value} ...]
+# result of the query in nutrients_search
+# [
+#     {
+#         "id": 658453,
+#         "title": "Roast Pork Florentine With Pomegranate Sauce",
+#         "image": "https://spoonacular.com/recipeImages/658453-312x231.jpg",
+#         "imageType": "jpg",
+#         "calories": 382,
+#         "protein": "38g",
+#         "fat": "12g",
+#         "carbs": "30g"
+#     },
+#     {
+#         "id": 715397,
+#         "title": "Cheesy Chicken and Rice Casserole",
+#         "image": "https://spoonacular.com/recipeImages/715397-312x231.jpg",
+#         "imageType": "jpg",
+#         "calories": 464,
+#         "protein": "31g",
+#         "fat": "28g",
+#         "carbs": "21g"
+#     }
+# ]
