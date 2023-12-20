@@ -4,13 +4,20 @@
 
 
 {% block content %}
-{% for recipe in recipes %}
 <div>
-    <h2>{{ recipe.title }}</h2>
-    <h3>Calories: {{ recipe.calories }} kcal</h3>
-    <h3>Protein: {{ recipe.protein }}</h3>
-    <h3>Carbohydates: {{ recipe.carbs }}</h3>
+{% for recipe in recipes %}
     <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
-</div>
+    <h2>{{ recipe.title }}</h2>
+    <h4>Recipe id: {{ recipe.id }}</h4>
+    <h4>Calories: {{ recipe.calories }} kcal</h4>
+    <h4>Protein: {{ recipe.protein }}</h4>
+    <h4>Carbohydates: {{ recipe.carbs }}</h4>
 {% endfor %}
+</div>
+<form action="/get_instructions" method = "post">
+    <label for="instructions">Enter id of desired recipe to see how to make it :</label>
+    <input type="text" id="instructions" name="instructions">
+    <button type="submit">Search</button>
+</form>
+
 {% endblock %}
