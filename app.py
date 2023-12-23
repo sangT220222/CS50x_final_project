@@ -225,15 +225,54 @@ def nutrients_search(): #we will update this, for now we are writing the bluepri
 def get_instructions():
     recipe_id = request.form.get("instructions")
     base_url = "https://api.spoonacular.com/recipes/"+ recipe_id +"/analyzedInstructions"
-    print(base_url)
     parametres = {
         "apiKey" : api_key,
     }
     response = requests.get(base_url, parametres)
-    # response format -> [{"name" : "", "steps":[{"number" : 1, "step" : , "ingredients" : [{"id": , "name": }, {"id":, "name": }], "equipment" : []}, } ]}
-    print(response)
-    return("/")
+    if response.status_code == 200:
+        data = response.json()
 
+        # Iterate through the recipe data and apply the function
+        for recipe in data:
+            remove_equipment(recipe.get("steps", []))
+            # get("steps", []) tries to retrieve the value associated with the key "steps" from the recipe dictionary.
+
+            # return recipe["steps"]
+            # Remove "id" and "localizedName" from ingredients
+            modified_recipe_array = [
+                {
+                    # For each step in the original recipe_array, create a new dictionary
+                    "ingredients": [
+                        {k: v for k, v in ingredient.items() if k not in ["id", "localizedName"]} for ingredient in step["ingredients"]
+                        #k: v for ... if k not in... ->  filters out the "id" and "localizedName" keys from each ingredient dictionary
+                        #for ingredient...  iterates over each dictionary in the "ingredients" list of the current step.
+                    ],
+                    "number": step["number"],
+                    "step": step["step"]
+                }
+                for step in recipe["steps"]
+            ]
+
+            array_length = len(modified_recipe_array)
+
+        return render_template("recipe_instructions.html", recipes = modified_recipe_array)
+        #wanna go through each iteration on modified_recipe_array so that it's modified_recipe_array[0],modified_recipe_array[1]...modified recipe_array[length-1]
+        #modified_recipe_array -> [{"ingredients":[{"name"},{"name"}]}, "number":1, "step":""} , {"ingredients":[{"name"},{"name"}]}, "number":2, "step":""}]
+
+    else:
+        return "Food ID typed is not valid"
+
+
+# function below will remove "equipment" in the respons format inside get_instruction()
+def remove_equipment(steps):
+    for step in steps:
+        step.pop("equipment", None)
+
+# function to remove "localizedName" and "id" from each ingredient
+def remove_keys(ingredients):
+    for ingredient in ingredients:
+        ingredient.pop("localizedName", None)
+        ingredient.pop("id", None)
 
 # [
 #     {

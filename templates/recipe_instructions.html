@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %} Instructions {% endblock %}
+
+
+{% block content %}
+<div>
+{% for step in recipes %}
+    <h2>Step {{ step.number }}</h2>
+    <p>{{ step.step }}</p>
+
+    {% if step.ingredients %}
+    <h3>Ingredients:</h3>
+    <ul>
+        {% for ingredient in step.ingredients %}
+            <li>{{ ingredient.name }} - <img src="{{ ingredient.image }}" alt="{{ ingredient.name }}" height="50"></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% endfor %}
+</div>
+
+{% endblock %}
