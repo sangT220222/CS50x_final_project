@@ -1,23 +1,30 @@
 {% extends "base.html" %}
 
 {% block title %} Results {% endblock %}
+{% block nutrients_search_search %}
+<link rel="stylesheet" href="/static/nutrients_search.css">
+{% endblock %}
 
 
 {% block content %}
-<div>
-{% for recipe in recipes %}
-    <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
-    <h2>{{ recipe.title }}</h2>
-    <h4>Recipe id: {{ recipe.id }}</h4>
-    <h4>Calories: {{ recipe.calories }} kcal</h4>
-    <h4>Protein: {{ recipe.protein }}</h4>
-    <h4>Carbohydates: {{ recipe.carbs }}</h4>
-{% endfor %}
+<div class = "container">
+    {% for recipe in recipes %}
+        <div class="recipe-card">
+            <img src="{{ recipe.image }}" alt="{{ recipe.title }}">
+            <div class="recipe-details">
+                <h2>{{ recipe.title }}</h2>
+                <h4>Recipe id: {{ recipe.id }}</h4>
+                <h4>Calories: {{ recipe.calories }} kcal</h4>
+                <h4>Protein: {{ recipe.protein }}</h4>
+                <h4>Carbohydrates: {{ recipe.carbs }}</h4>
+            </div>
+        </div>
+    {% endfor %}
+    <form action="/get_instructions" method = "post">
+        <label for="instructions">Enter id of desired recipe to see how to make it :</label>
+        <input type="text" id="instructions" name="instructions">
+        <button type="submit">Search</button>
+    </form>
 </div>
-<form action="/get_instructions" method = "post">
-    <label for="instructions">Enter id of desired recipe to see how to make it :</label>
-    <input type="text" id="instructions" name="instructions">
-    <button type="submit">Search</button>
-</form>
 
 {% endblock %}
