@@ -1,0 +1,63 @@
+body, h1, h2, h3, p, ul, ol, li {
+    margin: 0;
+    padding: 0;
+}
+/* Apply a simple container to center content */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Style the recipe card */
+.recipe-card {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.recipe-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+.recipe-details h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.recipe-details h4 {
+    color: #666;
+    margin-bottom: 5px;
+}
+
+/* Style the form */
+.recipe-form {
+    margin-top: 20px;
+}
+
+.recipe-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.recipe-form input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+.recipe-form button {
+    background-color: #4CAF50;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Add some spacing between form elements */
+.recipe-form label, .recipe-form input, .recipe-form button {
+    display: block;
+    margin-bottom: 10px;
+}
