@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %} Login {% endblock %}
+{% block login_style %}
+
+<link href = "/static/login.css" rel = "stylesheet">
+
+{% endblock %}
 
 {% block content %}
     <form action="/login" method="post">
