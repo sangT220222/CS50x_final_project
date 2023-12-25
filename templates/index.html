@@ -11,25 +11,26 @@
 <h1>Get your customised meal</h1>
 <form action="/nutrients_search" method="post">
     <div class="form-container">
-        <label for="calories">Enter Maximum Calories (kcal):</label>
+        <label for="calories">Enter Maximum Calories (kcal)</label>
         <input type="text" id="calories" name="calories">
 
-        <label for="protein">Enter Minimum Protein (grams):</label>
+        <label for="protein">Enter Minimum Protein (grams)</label>
         <input type="text" id="protein" name="protein">
 
-        <label for="carbs">Enter Maximum Carbohydrates (grams):</label>
+        <label for="carbs">Enter Maximum Carbohydrates (grams)</label>
         <input type="text" id="carbs" name="carbs">
+        <button type="submit">Search</button>
+
     </div>
-    <button type="submit">Search</button>
 </form>
 
-<h2>Type in what cuisine you want!</h2>
+<!-- <h2>Type in what cuisine you want!</h2>
 <form action="/search_cuisine" method="post">
     <div class="form-container">
-        <label for="cuisine">Enter Cuisine:</label>
+        <label for="cuisine">Enter Cuisine</label>
         <input type="text" id="cuisine" name="cuisine">
     </div>
     <button type="submit">Search</button>
-</form>
+</form> -->
 
 {% endblock %}
