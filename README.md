@@ -13,3 +13,5 @@ static/: this folder contains the css files that are used with the respective ht
 
 templates/: this folder contains all the html pages that are used for this project.
 
+Website preview:
+![image](https://github.com/sangT220222/CS50x_final_project/assets/100322380/710df68a-8ed4-4f11-88b0-43a8f3c33a16)
